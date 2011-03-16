@@ -9,6 +9,7 @@ class NavigableNavElement
 	public $url;
 	public $title;
 	public $parent_id;
+	public $slug;
 	
 	/*
 	 *	Subnav holder. Built out in build_nav_tree
@@ -35,6 +36,7 @@ class NavigableNavElement
 		$this->url	 	 = $elem['url'];
 		$this->title	 = $elem['title'];
 		$this->parent_id = $elem['parent'];
+		$this->slug	     = $elem['slug'];
 	}
 	
 	

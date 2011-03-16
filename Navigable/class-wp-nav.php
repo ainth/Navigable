@@ -12,9 +12,9 @@ class NavigableWP extends NavigableNav
 	 *	@param array  $params			Array of arguments accpted by wp_get_nav_menu_items
 	 */
 	public function __construct($nav_selector, $params = array()) {
-	
+		
 		$this->raw = wp_get_nav_menu_items($nav_selector, $params);
-
+		$this->page_slugs = $this->get_page_slugs();
 		parent::__construct();
 		
 	}
@@ -42,17 +42,35 @@ class NavigableWP extends NavigableNav
 	public function clean_objects($nav_elements) {
 	
 		foreach ($nav_elements as $id => $elem) {
+			$slug = isset($this->page_slugs[$elem->object_id]) ? $this->page_slugs[$elem->object_id] : null;
 			$nav_elements[$id] = new NavigableNavElement(array(
 				'id'	 	=> $elem->ID,
 				'object_id' => $elem->object_id,
 				'order'		=> $elem->menu_order,
 				'url'	 	=> $elem->url,
 				'title'		=> $elem->title,
-				'parent' 	=> $elem->menu_item_parent
+				'parent' 	=> $elem->menu_item_parent,
+				'slug'		=> $slug
 			));
 		}
 		return $nav_elements;
 		
 	}
+	
+	/*
+	 *	The raw data in this case does not include the 'page_name' property of the associated page, though
+	 *	we do get when we're just building with pages only. This will fetch all pages ( heavy :( ) and build
+	 *	a simple array of the $id=>$slug variety to use.
+	 *
+	 *	@return array	$post_id=>$post_slug
+	 */
+	private function get_page_slugs() {
+	 	$pages = get_pages();
+	 	$page_slugs = array();
+	 	foreach ($pages as $page) {
+	 		$page_slugs[$page->ID] = $page->post_name;
+	 	}
+	 	return $page_slugs;
+	 }
 	
 }

@@ -3,20 +3,22 @@
 	Plugin Name: Navigable
 	Plugin URI: 
 	Description: Provides an object oriented navigation interface for templating as an alternative to wp_nav_menu(). PHP5+ required.
-	Version: 0.2
+	Version: 0.3
 	Author: Allen Hebden
 	Author URI: http://intelligible.ca
 	License: GPL2
 */
 
 require_once 'class-nav-element.php';
-require_once 'class-wp.php';
+require_once 'class-wp-nav.php';
+require_once 'class-wp-pages.php';
 
 
 abstract class NavigableNav
 {
 	public  $current_post;	
 	public  $cleaned_objects;
+	public 	$page_slugs;
 	public  $tree;
 
 	
@@ -54,10 +56,12 @@ abstract class NavigableNav
 		$this->current_post	   = $this->determine_current();
 		$this->cleaned_objects = $this->clean_objects($this->raw); 
 		$this->tree 		   = $this->build_nav_tree($this->cleaned_objects);
-		
+
 		if ($this->current_post) {
 			$this->tree = $this->mark_active($this->tree);
-		}
+		} else if ($this->current_post = $this->guess_active()) {
+			$this->tree = $this->mark_active($this->tree);
+		}	
 		
 	}
 	
@@ -106,14 +110,14 @@ abstract class NavigableNav
 	 *	@param array  $nav_tree	A tree of nav elements to look in
 	 *	@param string $id		The id to look for	
 	 */
-	public function elem_in_tree($nav_tree, $id) {
-	
+	public function elem_in_tree($nav_tree, $val, $mode = 'id') {
+
 		foreach ($nav_tree as $elem) {
-			if ($elem->id == $id) {
-				return true;
+			if ($elem->$mode == $val) {
+				return $elem->id;
 			}
 			if (!empty($elem->sub_nav)) {
-				return $this->elem_in_tree($elem->sub_nav, $id);
+				return $this->elem_in_tree($elem->sub_nav, $val, $mode);
 			}
 		}
 		return false;
@@ -240,7 +244,7 @@ abstract class NavigableNav
 	
 	    foreach ($nav_tier as $key => $elem) {
 	    
-	        if ($elem->object_id == $this->current_post) {
+	        if ($elem->id == $this->current_post) {
 	            $nav_tier = $this->flag($nav_tier, $key);
 	            return $nav_tier;
 	        }
@@ -273,5 +277,24 @@ abstract class NavigableNav
 	    if (isset($nav_tier[$key+1])) {$nav_tier[$key+1]->set_active_state('post', $parent);}
 	    return $nav_tier;
 	}
+	
+	/*
+	 *	Assumes clean urls which match the navigation elements, makes the best assumption it can 
+	 *	about what pages you're on. eg: you're on /about/stuff/things/3. If 3 is not in the nav we don't know
+	 *	what to do, this will effectively mark 'things' since it's the next nearest thing in the tree.
+	 */
+	 private function guess_active() {
+	 
+	 	$path = parse_url($_SERVER['REQUEST_URI']);
+	 	$path = array_reverse(explode('/',$path['path']));
+	 	
+	 	foreach($path as $page_slug) {
+	 		if ($id = $this->elem_in_tree($this->tree, $page_slug, 'slug')) {
+	 			return $id;
+	 		}
+	 	}
+		return false;
+	 }
+	 
 }
   
