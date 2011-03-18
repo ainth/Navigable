@@ -109,14 +109,16 @@ abstract class NavigableNav
 	 *
 	 *	@param array  $nav_tree	A tree of nav elements to look in
 	 *	@param string $id		The id to look for	
+	 *	@param string $mode		Which property to compare against, either id or slug
+	 *	@param bool	  $wall		Whether or not to recurse into subnav elements
 	 */
-	public function elem_in_tree($nav_tree, $val, $mode = 'id') {
+	public function elem_in_tree($nav_tree, $val, $mode = 'id', $wall = false) {
 
 		foreach ($nav_tree as $elem) {
 			if ($elem->$mode == $val) {
 				return $elem->id;
 			}
-			if (!empty($elem->sub_nav)) {
+			if (!empty($elem->sub_nav) && !$wall) {
 				return $this->elem_in_tree($elem->sub_nav, $val, $mode);
 			}
 		}
@@ -233,6 +235,49 @@ abstract class NavigableNav
 		}
 		
 	}
+	/*
+	 *	Assumes clean urls which match navigation elements, makes the best assumption it can 
+	 *	about what pages you're on. eg: you're on /about/stuff/things/3. If 3 is not in the nav we don't know
+	 *	what to do, this will effectively mark 'things' since it's the next nearest thing in the tree.
+	 */
+	 private function guess_active() {
+	 	
+	 	$tree = $this->tree;
+	 	$path = parse_url($_SERVER['REQUEST_URI']);
+	 	$path = explode('/',$path['path']);
+	 	array_shift($path);	//first element always an empty string because of leading slash.
+	 	
+		foreach ($path as $page_slug) {
+			if ($id = $this->elem_in_tree($tree, $page_slug, 'slug', true)) {
+				$elem = $this->get_element_by_id($tree, $id);
+				if (!empty($elem->sub_nav)) {
+					$tree = $elem->sub_nav;
+				} else {
+					return $id;
+				}
+			}
+		}
+		return false;
+	 }
+	 
+	 /*
+	  *	Returns the element in the given tree with the given id, recursive.
+	  *	
+	  *	@param array $tree	A tree to look for the id in
+	  *	@param int	 $id	The id to look for
+	  *	@return NavigableNavElement	The element matching the id.
+	  */
+	 private function get_element_by_id($tree, $id) {
+	 	foreach ($tree as $elem) {
+	 		if ($elem->id == $id) {
+	 			return $elem;
+	 		} else if (!empty($elem->sub_nav)) {
+	 			return $this->get_element_by_id($elem->sub_nav, $id);
+	 		}
+	 	}
+	 	return false;
+	 }
+	 
 	
 	
 	/*
@@ -277,24 +322,6 @@ abstract class NavigableNav
 	    if (isset($nav_tier[$key+1])) {$nav_tier[$key+1]->set_active_state('post', $parent);}
 	    return $nav_tier;
 	}
-	
-	/*
-	 *	Assumes clean urls which match the navigation elements, makes the best assumption it can 
-	 *	about what pages you're on. eg: you're on /about/stuff/things/3. If 3 is not in the nav we don't know
-	 *	what to do, this will effectively mark 'things' since it's the next nearest thing in the tree.
-	 */
-	 private function guess_active() {
-	 
-	 	$path = parse_url($_SERVER['REQUEST_URI']);
-	 	$path = array_reverse(explode('/',$path['path']));
-	 	
-	 	foreach($path as $page_slug) {
-	 		if ($id = $this->elem_in_tree($this->tree, $page_slug, 'slug')) {
-	 			return $id;
-	 		}
-	 	}
-		return false;
-	 }
 	 
 }
   
