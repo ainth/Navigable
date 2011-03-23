@@ -116,13 +116,39 @@ abstract class NavigableNav
 			if ($elem->$mode == $val) {
 				return $elem->id;
 			}
-			if (!empty($elem->sub_nav) && !$wall) {
-				return $this->elem_in_tree($elem->sub_nav, $val, $mode);
+      if (!empty($elem->sub_nav) && !$wall) {
+        $sub_nav_test = $this->elem_in_tree($elem->sub_nav, $val, $mode);
+        if ($sub_nav_test) {
+          return $sub_nav_test;
+        }
 			}
 		}
 		return false;
 		
 	}
+	
+	/*
+	 * Find a branch (or sub_nav) by a given property (defaults to id, which is the only one that makes sense really.
+	 *
+	 * @param string $id   The value to look for in the given property
+	 * @param string $prop Which property to test elements for for the given id
+	 * @return array			A navigation tree, or false.
+	 */
+
+  public function find_branch($id, $prop = 'id', $tree = false) {
+    $tree = !$tree ? $this->tree : $tree;
+    foreach ($tree as $elem) {
+      if ($elem->$prop == $id && !empty($elem->sub_nav)) {
+        return $elem->sub_nav;
+			} else if (!empty($elem->sub_nav)) {
+					$sub_nav_test = $this->find_branch($slug, $prop, $elem->sub_nav);
+					if ($sub_nav_test) {
+						return $sub_nav_test;
+					}
+      }
+		}
+		return false;
+  }
 	
 	/*------------------------------------------------------
 	 * Private Methods
@@ -269,8 +295,11 @@ abstract class NavigableNav
 	 	foreach ($tree as $elem) {
 	 		if ($elem->id == $id) {
 	 			return $elem;
-	 		} else if (!empty($elem->sub_nav)) {
-	 			return $this->get_element_by_id($elem->sub_nav, $id);
+      } else if (!empty($elem->sub_nav)) {
+        $sub_nav_test = $this->get_element_by_id($elem->sub_nav, $id);
+        if ($sub_nav_test) {
+					return $sub_nav_test;
+        }
 	 		}
 	 	}
 	 	return false;
