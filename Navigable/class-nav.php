@@ -42,7 +42,6 @@ abstract class NavigableNav
 	 */
 	abstract function determine_current();
 	
-	
 	/*------------------------------------------------------
 	 * Public Methods
 	 *------------------------------------------------------
@@ -62,7 +61,6 @@ abstract class NavigableNav
 		} else if ($this->current_post = $this->guess_active()) {
 			$this->tree = $this->mark_active($this->tree);
 		}	
-		
 	}
 	
 	/*
@@ -92,7 +90,7 @@ abstract class NavigableNav
 		if (!$tier) {$tier = $this->tree;}
 		
 		foreach ($tier as $elem) {
-			if ($elem->is_current()) {
+			if ($elem->if_current()) {
 				return $tier;
 			}
 			if (!empty($elem->sub_nav)) {
@@ -289,7 +287,7 @@ abstract class NavigableNav
 	
 	    foreach ($nav_tier as $key => $elem) {
 	    
-	        if ($elem->id == $this->current_post) {
+	        if ($elem->object_id == $this->current_post) {
 	            $nav_tier = $this->flag($nav_tier, $key);
 	            return $nav_tier;
 	        }

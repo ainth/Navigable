@@ -72,5 +72,5 @@ class NavigableWP extends NavigableNav
 	 	}
 	 	return $page_slugs;
 	 }
-	
+
 }
