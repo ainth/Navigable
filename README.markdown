@@ -59,8 +59,8 @@ There's a bunch more that operate in much the same way:
 
 Here are the variables navigation elements have: 
 	<?php
-		$elem->id;				// In the NavigableWP class, the id is the id of the nav menu item. In the NavigableWPPages class it is the id of the actual page
-		$elem->object_id;	// In the NavigableWP class, this is the id of the page referred to by the nav menu item. In the NavigableWPPages class it is the id of the actual page...again.
+		$elem->id;				// In NavigableWP class, id of the nav menu item. In NavigableWPPages id of actual page
+		$elem->object_id;	// In NavigableWP class, id of the page. In the NavigableWPPages class, same as id
 		$elem->order;			// Not too useful. The menu order of the item
 		$elem->url;				// Full url of the page/post.
 		$elem->title;			// Name of the element.
