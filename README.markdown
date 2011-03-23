@@ -56,6 +56,21 @@ You might want whichever tier of navigation the current page is on:
 		<?php endforeach; ?>
 	<?php endif; ?>
 
+You might want the sub-navigation of a particular element:
+	<?php if ($some_nav = $nav->find_branch(74)): //get the subnav of element 74 ?>
+		<?php foreach ($some_nav as $elem): ?>
+			...
+		<?php endforeach; ?>
+	<?php endif; ?>
+	
+or
+	<?php ////get the sub_nav of the first element whose title is 'About Us'. Hopefully there's just one.  ?>
+	<?php if ($some_nav = $nav->find_branch('About Us', 'title')): ?>
+		<?php foreach ($some_nav as $elem): ?>
+			...
+		<?php endforeach; ?>
+	<?php endif; ?>
+
 
 You'll probably want to mark which things are active based on which page the user is on. And if you're very fancy you'll want to mark the elements before and after that element:
 
