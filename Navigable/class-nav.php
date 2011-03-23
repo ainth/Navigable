@@ -307,7 +307,6 @@ abstract class NavigableNav
 	    return $nav_tier;
 	}
 	
-	
 	/*
 	 *	Mark a tier of navigation with active entities
 	 *

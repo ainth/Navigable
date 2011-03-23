@@ -57,7 +57,7 @@ class NavigableNavElement
 	 *	@param  string $markup	The markup to echo if the conditions apply
 	 *	@return bool whether or not this is the current post
 	 */
-	public function is_current($markup = false) {
+	public function if_current($markup = false) {
 		if ($this->active_state == 'active' && $this->active_parent == false) {
 			if ($markup) {echo $markup;}
 			return true;
