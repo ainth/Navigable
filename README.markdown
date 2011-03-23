@@ -1,4 +1,5 @@
--Usage
+Usage
+------
 You need to instantiate a navigation object first:
 	<?php $nav = new NavigableWP('Title of Navigation', $args); ?>
 
@@ -68,8 +69,8 @@ Here are the variables navigation elements have:
 	?>
 
 
--Motivation
-
+Motivation
+-----
 Navigation in wordpress is handled like so:  
 	<?php wp_nav_menu($args); ?>
 
