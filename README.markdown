@@ -135,6 +135,12 @@ Passing an array of arguments lets you control a lot of the markup that's genera
 	  'walker'          => );
 	?>
 
-I found this a bit unsatisfactory - I'd much rather have some kind of data structure to work with that would let me iterate over nav elements so I have complete control over the markup. I also needed to assign a class to the nav element that comes before the active element and saw no way to do that with the standard WordPress function.
+I found this a bit unsatisfactory - I'd much rather have some kind of
+data structure to work with that would let me iterate over nav elements
+so I have complete control over the markup. I also needed to assign a
+class to the nav element that comes before the active element and saw no
+way to do that with the standard WordPress function. Finally, I needed
+the sub navigation on its own, apart from the main nav listing, and saw
+no way to do it.
 
-The problem with the whole approach is of course that if you have a whole lot of sub navigation tiers your code is going to get quite messy. But then most designs aren't going to support too many navigation tiers either, and if they did they'd likely need different classes and such to be able to support the design so this still works.
+The problem (thought it's not a problem for most I bet) with the approach I'm taking with this plugin is of course that if you have a whole lot of sub navigation tiers your code is going to get quite messy. But then most designs aren't going to support too many navigation tiers either, and if they did they'd likely need different classes and such to be able to support the design so this still works.
