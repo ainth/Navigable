@@ -4,10 +4,11 @@ Navigable is a WordPress plugin for template developers. It gives you an alterna
 
 * Navigable gives you a data structure to work with. You have 100% markup control, and it's all in the templates.
 * You can determine if a nav element occurs before/after an active element.
-* Flexibility. Need the current sub-navigation separate from the main nav list? Need whichever navigation tier the current page is on all by itself? Need the sub nav tree of a specific element?.
+* Flexibility. Need the current sub-navigation separate from the main nav list? Need whichever navigation tier the current page is on all by itself? Need the sub nav tree of a specific element?
 
 ####Requires:
 PHP5
+Only tested on WordPress 3.1
 
 Usage
 ------
