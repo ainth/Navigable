@@ -72,8 +72,7 @@ abstract class NavigableNav
     public function current_subnav() {
 
         foreach ($this->tree as $elem) {
-            if ($elem->if_active()
-                && !empty($elem->sub_nav)) {
+            if ($elem->if_active() && !empty($elem->sub_nav)) {
                 return $elem->sub_nav;
             }
         }
@@ -97,8 +96,8 @@ abstract class NavigableNav
                 return $tier;
             }
             if (!empty($elem->sub_nav)) {
-                $child_tier = $this->active_tier($elem->sub_nav);
-                if (!empty($child_tier)) {return $child_tier;}
+                $test_children = $this->active_tier($elem->sub_nav);
+                if (!empty($test_children)) {return $test_children;}
             }
         }
         return false;
@@ -122,10 +121,8 @@ abstract class NavigableNav
             }
 
             if (!empty($elem->sub_nav) && !$wall) {
-                $sub_nav_test = $this->elem_in_tree($elem->sub_nav, $val, $mode);
-                if ($sub_nav_test) {
-                    return $sub_nav_test;
-                }
+                $test_children = $this->elem_in_tree($elem->sub_nav, $val, $mode);
+                if ($test_children ) {return $test_children;}
             }
         }
         return false;
@@ -147,9 +144,9 @@ abstract class NavigableNav
             if ($elem->$prop == $id && !empty($elem->sub_nav)) {
                 return $elem->sub_nav;
             } else if (!empty($elem->sub_nav)) {
-                $sub_nav_test = $this->find_branch($slug, $prop, $elem->sub_nav);
-                if ($sub_nav_test) {
-                  return $sub_nav_test;
+                $test_children = $this->find_branch($slug, $prop, $elem->sub_nav);
+                if ($test_children) {
+                  return $test_children;
                 }
             }
         }
@@ -304,9 +301,9 @@ abstract class NavigableNav
             if ($elem->id == $id) {
                  return $elem;
             } else if (!empty($elem->sub_nav)) {
-                $sub_nav_test = $this->get_element_by_id($elem->sub_nav, $id);
-                if ($sub_nav_test) {
-                    return $sub_nav_test;
+                $test_children = $this->get_element_by_id($elem->sub_nav, $id);
+                if ($test_children) {
+                    return $test_children;
                 }
             }
         }
