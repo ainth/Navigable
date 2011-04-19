@@ -1,6 +1,6 @@
 <?php
 define('CURRENT_POST', 7);
-define('NAV_SIZE', 300);
+define('NAV_SIZE', 500);
 define('NODE_SIZE', 5);
 
 require '../Navigable/class-nav.php';
@@ -21,17 +21,24 @@ class NavTest extends PHPUnit_Framework_TestCase
     }
 
     public function testElementFinder() {
-        $testElement =  $this->nav->get_element_by_id(8);
+        $testElement =  $this->nav->get_element(8);
         $this->assertInstanceOf('NavigableNavElement', $testElement);
         $this->assertEquals($testElement->id, 8);
     }
     public function testCurrentPost() {
-        $currentPost = $this->nav->get_element_by_id(CURRENT_POST);
+        $currentPost = $this->nav->get_element(CURRENT_POST);
         $this->assertTrue($currentPost->if_current());
         //this is what if_current is based on
         $this->assertEquals($currentPost->active_state, 'active');
         //this is not the parent of the active, but the active itself
         $this->assertFalse($currentPost->active_parent);
+    }
+
+    public function testParentTier() {
+        $currentPost = $this->nav->get_element(CURRENT_POST);
+        $parentPost  = $this->nav->get_element($currentPost->parent_id);
+        $this->assertEquals($parentPost->active_state, 'active');
+        $this->assertTrue($parentPost->active_parent);
     }
 
     private function countElements($nav) {

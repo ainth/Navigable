@@ -137,7 +137,7 @@ abstract class NavigableNav
       * @return array               A navigation tree, or false.
       */
 
-    public function find_branch($id, $prop = 'id', $tree = false) {
+    public function get_branch($id, $prop = 'id', $tree = false) {
 
         $tree = !$tree ? $this->tree : $tree;
         foreach ($tree as $elem) {
@@ -154,6 +154,7 @@ abstract class NavigableNav
 
     }
 
+
       /*
        *     Returns the element in the given tree with the given id, recursive.
        *
@@ -162,15 +163,14 @@ abstract class NavigableNav
        *     @return NavigableNavElement     The element matching the id.
        */
 
-    public function get_element_by_id($id, $tree = null) {
-        if ($tree === null) {
-            $tree = $this->tree;
-        }
+    public function get_element($id, $tree = null) {
+
+        $tree = !$tree ? $this->tree : $tree;
         foreach ($tree as $elem) {
             if ($elem->id == $id) {
                  return $elem;
             } else if (!empty($elem->sub_nav)) {
-                $test_children = $this->get_element_by_id($id, $elem->sub_nav);
+                $test_children = $this->get_element($id, $elem->sub_nav);
                 if ($test_children) {
                     return $test_children;
                 }
@@ -179,6 +179,7 @@ abstract class NavigableNav
         return false;
 
     }
+
 
 
  /*------------------------------------------------------
@@ -303,7 +304,7 @@ abstract class NavigableNav
 
         foreach ($path as $page_slug) {
            if ($id = $this->elem_in_tree($tree, $page_slug, 'slug', true)) {
-                $elem = $this->get_element_by_id($tree, $id);
+                $elem = $this->get_element($tree, $id);
                 if (!empty($elem->sub_nav)) {
                      $tree = $elem->sub_nav;
                 } else {
