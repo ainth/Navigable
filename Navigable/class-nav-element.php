@@ -9,7 +9,8 @@ class NavigableNavElement
 	public $url;
 	public $title;
 	public $parent_id;
-	public $slug;
+    public $slug;
+    public $has_been_walked = false;
 	
 	/*
 	 *	Subnav holder. Built out in build_nav_tree
@@ -128,5 +129,11 @@ class NavigableNavElement
 		}
 		return false;
 	}
-	
+
+	/*
+     *	Mark this element as having been dealt with by the tree builder
+     */	
+    public function mark_walked() {
+        $this->has_been_walked = true;
+    }
 }

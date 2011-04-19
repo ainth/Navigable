@@ -25,7 +25,7 @@ class NavigableWPPages extends NavigableNav
 	 */
 	public function determine_current() {
 
-		if (function_exists('get_queried_object')) {
+		if (function_exists('get_queried_object') && !empty(get_queried_object()->ID)) {
 			return get_queried_object()->ID;
 		} else {
 			return false;
@@ -39,7 +39,6 @@ class NavigableWPPages extends NavigableNav
 	 *	@return array	Nav Elements
 	 */
 	public function clean_objects($nav_elements) {
-	
 		foreach ($nav_elements as $id => $elem) {
 			$nav_elements[$id] = new NavigableNavElement(array(
 				'id'	 	=> $elem->ID,

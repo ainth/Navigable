@@ -3,7 +3,7 @@
      Plugin Name: Navigable
      Plugin URI: 
      Description: Provides an object oriented navigation interface for templating as an alternative to wp_nav_menu(). PHP5+ required.
-     Version: 0.3
+     Version: 0.35
      Author: Allen Hebden
      Author URI: http://intelligible.ca
      License: GPL2
@@ -51,9 +51,9 @@ abstract class NavigableNav
      */
     public function __construct() {
 
-        $this->current_post        = $this->determine_current();
-        $this->cleaned_objects = $this->clean_objects($this->raw); 
-        $this->tree              = $this->build_nav_tree($this->cleaned_objects);
+        $this->current_post     = $this->determine_current();
+        $this->cleaned_objects  = $this->clean_objects($this->raw);
+        $this->tree             = $this->build_nav_tree($this->cleaned_objects);
 
         if ($this->current_post) {
             $this->tree = $this->mark_active($this->tree);
@@ -154,6 +154,33 @@ abstract class NavigableNav
 
     }
 
+      /*
+       *     Returns the element in the given tree with the given id, recursive.
+       *
+       *     @param array $tree     A tree to look for the id in
+       *     @param int      $id     The id to look for
+       *     @return NavigableNavElement     The element matching the id.
+       */
+
+    public function get_element_by_id($id, $tree = null) {
+        if ($tree === null) {
+            $tree = $this->tree;
+        }
+        foreach ($tree as $elem) {
+            if ($elem->id == $id) {
+                 return $elem;
+            } else if (!empty($elem->sub_nav)) {
+                $test_children = $this->get_element_by_id($id, $elem->sub_nav);
+                if ($test_children) {
+                    return $test_children;
+                }
+            }
+        }
+        return false;
+
+    }
+
+
  /*------------------------------------------------------
   * Private Methods
   *------------------------------------------------------
@@ -171,13 +198,14 @@ abstract class NavigableNav
       *     @return array     Nav element tree
       */
     private function build_nav_tree($nav_elements) {
-
         $new_nav = array();
 
         foreach ($nav_elements as $elem) {
-            //returns an array containing all of the element's children. Recursive.
-            $elem->sub_nav = $this->find_children($nav_elements, $elem->id);
+            if ($elem->has_been_walked) {continue;}
 
+            //returns an array containing all of the element's children. Recursive.
+            $elem->mark_walked();
+            $elem->sub_nav = $this->find_children($nav_elements, $elem->id);
             if ($elem->is_a_root_element()) {
                 $new_nav[$elem->id] = $elem;
             } else if ($this->elem_in_tree($new_nav, $elem->parent_id)) {
@@ -223,24 +251,23 @@ abstract class NavigableNav
 
      /*
       *     Recursively find children in a flat array, forming a multidimensional array
-      *
+      *  
       *     @param array  $nav_elements         Flat array of nav elements to look through.
       *     @param string $id                   Parent's id
       *     @return array                       Tree of nav elements that are children of given id
       */
     private function find_children($nav_elements, $id) {
-
         $children = array();
         foreach ($nav_elements as $elem) {
-           if ($elem->parent_id == $id) {
+            if ($elem->has_been_walked) {continue;}
+            if ($elem->parent_id == $id) {
+                $elem->mark_walked();
                 $elem->sub_nav = $this->find_children($nav_elements, $elem->id);
                 $children[$elem->id] = $elem;
-           }
+            }
         }
         return $children;
-
     }
-
 
      /*
       *     Add $this_elem to its parent's subnav in the given nav tree. Recursively looks for parent.
@@ -250,7 +277,6 @@ abstract class NavigableNav
       *
       */
     private function append_to_subnav(&$nav_tree, $this_elem) {
-
         $parent_id = $this_elem->parent_id;
 
         foreach ($nav_tree as $elem) {
@@ -262,6 +288,7 @@ abstract class NavigableNav
         }
 
     }
+
      /*
       *     Assumes clean urls which match navigation elements, makes the best assumption it can 
       *     about what pages you're on. eg: you're on /about/stuff/things/3. If 3 is not in the nav we don't know
@@ -283,29 +310,6 @@ abstract class NavigableNav
                      return $id;
                 }
            }
-        }
-        return false;
-
-    }
-
-      /*
-       *     Returns the element in the given tree with the given id, recursive.
-       *
-       *     @param array $tree     A tree to look for the id in
-       *     @param int      $id     The id to look for
-       *     @return NavigableNavElement     The element matching the id.
-       */
-    private function get_element_by_id($tree, $id) {
-
-        foreach ($tree as $elem) {
-            if ($elem->id == $id) {
-                 return $elem;
-            } else if (!empty($elem->sub_nav)) {
-                $test_children = $this->get_element_by_id($elem->sub_nav, $id);
-                if ($test_children) {
-                    return $test_children;
-                }
-            }
         }
         return false;
 
