@@ -1,7 +1,7 @@
 <?php
-define('CURRENT_POST', 7);
+define('CURRENT_POST', 60);
 define('NAV_SIZE', 500);
-define('NODE_SIZE', 5);
+define('NODE_SIZE', 50);
 
 require '../Navigable/class-nav.php';
 require 'wp-mimics.php';
@@ -13,6 +13,7 @@ class NavTest extends PHPUnit_Framework_TestCase
     public function __construct() {
         $this->nav = new NavigableWPPages();
     }
+
     public function testInitialization()
     {
         $this->assertTrue(is_array($this->nav->tree));
@@ -25,6 +26,7 @@ class NavTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('NavigableNavElement', $testElement);
         $this->assertEquals($testElement->id, 8);
     }
+
     public function testCurrentPost() {
         $currentPost = $this->nav->get_element(CURRENT_POST);
         $this->assertTrue($currentPost->if_current());
