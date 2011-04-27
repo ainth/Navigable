@@ -1,5 +1,7 @@
 Overview
 ----
+
+**Navigable will be submitted to the plugin system soon, I'd like a few more unit tests written first. **
 Navigable is a WordPress plugin for template developers. It gives you an alternative to WordPress's wp_nav_menu() function. Advantages:
 
 * Navigable gives you a data structure to work with. You have 100% markup control, and it's all in the templates.
@@ -116,6 +118,7 @@ Here are the variables navigation elements have:
 Things to know
 ----
 What page are you on? There's two different things Navigable does to try to figure it out. The first is the obvious route, we just ask WordPress: 
+
     $current_post = get_queried_object()->ID;
 
 This will work for pretty much everyone but didn't quite work for me. If you use podscms or any other plugin that means that the page you're on isn't a WordPress post that strategy won't work. So if that doesn't work Navigable will assume you are using clean urls that correspond nicely to your navigation tree, and will mark as active the last most specific thing it can find in the nav tree. For example, suppose the request uri is: *yoursite.com/about/stuff/andthings/my-pods-slug*. The *my-pods-slug* is actually a podscms slug, so WordPress is confused. Navigable will iterate through the nav tree, looking for *about*. If it finds it, it will look into *about*'s subnav if it has one and look for *stuff*, then again it will look for *andthings*. It will try to find *my-pods-slug* but can't so it will assume *andthings* is the current post.
