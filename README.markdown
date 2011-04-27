@@ -1,7 +1,7 @@
 Overview
 ----
 
-**Navigable will be submitted to the plugin system soon, I'd like a few more unit tests written first. **
+__Navigable will be submitted to the plugin system soon, I'd like a few more unit tests written first.__
 Navigable is a WordPress plugin for template developers. It gives you an alternative to WordPress's wp_nav_menu() function. Advantages:
 
 * Navigable gives you a data structure to work with. You have 100% markup control, and it's all in the templates.
