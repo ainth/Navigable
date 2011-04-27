@@ -21,92 +21,92 @@ Alternatively, if you want to skip a custom navigation menu and just have all pa
 	<?php $nav = new NavigableWPPages(); ?>
 
 Now you can iterate:
-	<ul>
-		<?php foreach ($nav->tree as $elem): ?>
-			<li><?php echo $elem->title; ?></li>
-		<?php endforeach; ?>
-	</ul>
+    <ul>
+        <?php foreach ($nav->tree as $elem): ?>
+            <li><?php echo $elem->title; ?></li>
+        <?php endforeach; ?>
+    </ul>
 
 If an element has a subnav:
-	<ul class="main-nav">
-		<?php foreach ($nav->tree as $elem): ?>
-			<li>
-				<?php echo $elem->title; ?>
-				<?php if ($elem->sub_nav): ?>
-					<ul class="sub-nav">
-					<?php foreach ($elem->sub_nav as $sub_elem): ?>
-						<li><?php echo $sub_elem->title; ?></li>
-					<?php endforeach; ?>
-					</ul>
-				<?php endif; ?>
-			</li>
-		<?php endforeach; ?>
-	</ul>
+    <ul class="main-nav">
+        <?php foreach ($nav->tree as $elem): ?>
+            <li>
+                <?php echo $elem->title; ?>
+                <?php if ($elem->sub_nav): ?>
+                    <ul class="sub-nav">
+                    <?php foreach ($elem->sub_nav as $sub_elem): ?>
+                        <li><?php echo $sub_elem->title; ?></li>
+                    <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 	
 If you want the current sub nav tree (useful if you need this outside the main nav loop):
-	<?php if ($sub_nav = $nav->current_sub_nav()): ?>
-		<?php foreach ($sub_nav as $elem): ?>
-			...
-		<?php endforeach; ?>
-	<?php endif; ?> 
+    <?php if ($sub_nav = $nav->current_sub_nav()): ?>
+        <?php foreach ($sub_nav as $elem): ?>
+            ...
+        <?php endforeach; ?>
+    <?php endif; ?> 
 
 You might want whichever tier of navigation the current page is on:
-	<?php if ($current_tier = $nav->active_tier()): ?>
-		<?php foreach ($current_tier as $elem): ?>
-			...
-		<?php endforeach; ?>
-	<?php endif; ?>
+    <?php if ($current_tier = $nav->active_tier()): ?>
+        <?php foreach ($current_tier as $elem): ?>
+            ...
+        <?php endforeach; ?>
+    <?php endif; ?>
 
 You might want the sub-navigation of a particular element:
-	<?php if ($some_nav = $nav->find_branch(74)): //get the subnav of element 74 ?>
-		<?php foreach ($some_nav as $elem): ?>
-			...
-		<?php endforeach; ?>
-	<?php endif; ?>
+    <?php if ($some_nav = $nav->find_branch(74)): //get the subnav of element 74 ?>
+        <?php foreach ($some_nav as $elem): ?>
+            ...
+        <?php endforeach; ?>
+    <?php endif; ?>
 	
 or
-	<?php ////get the sub_nav of the first element whose title is 'About Us'. Hopefully there's just one.  ?>
-	<?php if ($some_nav = $nav->find_branch('About Us', 'title')): ?>
-		<?php foreach ($some_nav as $elem): ?>
-			...
-		<?php endforeach; ?>
-	<?php endif; ?>
+    <?php ////get the sub_nav of the first element whose title is 'About Us'. Hopefully there's just one.  ?>
+    <?php if ($some_nav = $nav->find_branch('About Us', 'title')): ?>
+        <?php foreach ($some_nav as $elem): ?>
+            ...
+        <?php endforeach; ?>
+    <?php endif; ?>
 
 
 You'll probably want to mark which things are active based on which page the user is on. And if you're very fancy you'll want to mark the elements before and after that element:
 
-	...
-		<li class="nav-item<?php $elem->if_active(' active'); ?>">
-			<?php echo $elem->title; ?>
-		</li>
-	...
+    ...
+        <li class="nav-item<?php $elem->if_active(' active'); ?>">
+            <?php echo $elem->title; ?>
+        </li>
+    ...
 
 No need to use echo - whatever string you pass to any of these functions will be echo as if by magic.
 
 There's a bunch more that operate in much the same way:
-	<?php
-		$elem->if_current($markup); // echo markup if this element is the current post
-		$elem->if_active($markup);	// echo markup if element is active (both the direct parent and the current element are 'active')
-		$elem->if_active_parent($markup); // echo markup if element is a parent of the current element
-		$elem->if_before_active($markup);	// echo markup if element is before an active element (both parents and current)
-		$elem->if_after_active($markup);	// echo markup if element is after an active element (both parents and current)
-	?>
+    <?php
+        $elem->if_current($markup); // echo markup if this element is the current post
+        $elem->if_active($markup);	// echo markup if element is active (both the direct parent and the current element are 'active')
+        $elem->if_active_parent($markup); // echo markup if element is a parent of the current element
+        $elem->if_before_active($markup);	// echo markup if element is before an active element (both parents and current)
+        $elem->if_after_active($markup);	// echo markup if element is after an active element (both parents and current)
+    ?>
 
 Here are the variables navigation elements have: 
-	<?php
-		$elem->id;				// In NavigableWP class, id of the nav menu item. In NavigableWPPages id of actual page
-		$elem->object_id;	// In NavigableWP class, id of the page. In the NavigableWPPages class, same as id
-		$elem->order;			// Not too useful. The menu order of the item
-		$elem->url;				// Full url of the page/post.
-		$elem->title;			// Name of the element.
-		$elem->parent_id; // ID of the parent of the element. Root elements have a parent id of 0.
-		$elem->slug;			// The slug/url title/post_title of the element's page.
-	?>
+    <?php
+        $elem->id;				// In NavigableWP class, id of the nav menu item. In NavigableWPPages id of actual page
+        $elem->object_id;	// In NavigableWP class, id of the page. In the NavigableWPPages class, same as id
+        $elem->order;			// Not too useful. The menu order of the item
+        $elem->url;				// Full url of the page/post.
+        $elem->title;			// Name of the element.
+        $elem->parent_id; // ID of the parent of the element. Root elements have a parent id of 0.
+        $elem->slug;			// The slug/url title/post_title of the element's page.
+    ?>
 
 Things to know
 ----
 What page are you on? There's two different things Navigable does to try to figure it out. The first is the obvious route, we just ask WordPress: 
-	$current_post = get_queried_object()->ID;
+    $current_post = get_queried_object()->ID;
 
 This will work for pretty much everyone but didn't quite work for me. If you use podscms or any other plugin that means that the page you're on isn't a WordPress post that strategy won't work. So if that doesn't work Navigable will assume you are using clean urls that correspond nicely to your navigation tree, and will mark as active the last most specific thing it can find in the nav tree. For example, suppose the request uri is: *yoursite.com/about/stuff/andthings/my-pods-slug*. The *my-pods-slug* is actually a podscms slug, so WordPress is confused. Navigable will iterate through the nav tree, looking for *about*. If it finds it, it will look into *about*'s subnav if it has one and look for *stuff*, then again it will look for *andthings*. It will try to find *my-pods-slug* but can't so it will assume *andthings* is the current post.
 
