@@ -13,14 +13,17 @@ Only tested on WordPress 3.1
 Usage
 ------
 You need to instantiate a navigation object first:
-	<?php $nav = new NavigableWP('Title of Navigation', $args); ?>
+
+    <?php $nav = new NavigableWP('Title of Navigation', $args); ?>
 
 The paramaters are any arguments accepted by wp_get_nav_menu_items().
 
 Alternatively, if you want to skip a custom navigation menu and just have all pages thrown into a nav stew you can use a different class:
-	<?php $nav = new NavigableWPPages(); ?>
+
+    <?php $nav = new NavigableWPPages(); ?>
 
 Now you can iterate:
+
     <ul>
         <?php foreach ($nav->tree as $elem): ?>
             <li><?php echo $elem->title; ?></li>
@@ -28,6 +31,7 @@ Now you can iterate:
     </ul>
 
 If an element has a subnav:
+
     <ul class="main-nav">
         <?php foreach ($nav->tree as $elem): ?>
             <li>
@@ -44,6 +48,7 @@ If an element has a subnav:
     </ul>
 	
 If you want the current sub nav tree (useful if you need this outside the main nav loop):
+
     <?php if ($sub_nav = $nav->current_sub_nav()): ?>
         <?php foreach ($sub_nav as $elem): ?>
             ...
@@ -51,6 +56,7 @@ If you want the current sub nav tree (useful if you need this outside the main n
     <?php endif; ?> 
 
 You might want whichever tier of navigation the current page is on:
+
     <?php if ($current_tier = $nav->active_tier()): ?>
         <?php foreach ($current_tier as $elem): ?>
             ...
@@ -58,6 +64,7 @@ You might want whichever tier of navigation the current page is on:
     <?php endif; ?>
 
 You might want the sub-navigation of a particular element:
+
     <?php if ($some_nav = $nav->find_branch(74)): //get the subnav of element 74 ?>
         <?php foreach ($some_nav as $elem): ?>
             ...
@@ -65,6 +72,7 @@ You might want the sub-navigation of a particular element:
     <?php endif; ?>
 	
 or
+
     <?php ////get the sub_nav of the first element whose title is 'About Us'. Hopefully there's just one.  ?>
     <?php if ($some_nav = $nav->find_branch('About Us', 'title')): ?>
         <?php foreach ($some_nav as $elem): ?>
@@ -84,6 +92,7 @@ You'll probably want to mark which things are active based on which page the use
 No need to use echo - whatever string you pass to any of these functions will be echo as if by magic.
 
 There's a bunch more that operate in much the same way:
+
     <?php
         $elem->if_current($markup); // echo markup if this element is the current post
         $elem->if_active($markup);	// echo markup if element is active (both the direct parent and the current element are 'active')
@@ -93,6 +102,7 @@ There's a bunch more that operate in much the same way:
     ?>
 
 Here are the variables navigation elements have: 
+
     <?php
         $elem->id;				// In NavigableWP class, id of the nav menu item. In NavigableWPPages id of actual page
         $elem->object_id;	// In NavigableWP class, id of the page. In the NavigableWPPages class, same as id
@@ -113,7 +123,8 @@ This will work for pretty much everyone but didn't quite work for me. If you use
 
 Motivation
 -----
-Navigation in WordPress is handled like so:  
+Navigation in WordPress is handled like so: 
+ 
 	<?php wp_nav_menu($args); ?>
 
 Passing an array of arguments lets you control a lot of the markup that's generated:
