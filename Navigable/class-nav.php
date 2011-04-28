@@ -34,13 +34,6 @@ abstract class NavigableNav
       */
      abstract function clean_objects($nav_elements);
 
-     /*
-      *     Determines id of the current page
-      *
-      *     @return string      the id of the current post
-      */
-     abstract function determine_current();
-
  /*------------------------------------------------------
   * Public Methods
   *------------------------------------------------------
@@ -51,10 +44,10 @@ abstract class NavigableNav
      */
     public function __construct() {
 
-        $this->current_post     = $this->determine_current();
         $this->cleaned_objects  = $this->clean_objects($this->raw);
         $this->tree             = $this->build_nav_tree($this->cleaned_objects);
 
+        $this->current_post     = $this->determine_current();
         if ($this->current_post) {
             $this->tree = $this->mark_active($this->tree);
         } else if ($this->current_post = $this->guess_active()) {
@@ -144,7 +137,7 @@ abstract class NavigableNav
             if ($elem->$prop == $id && !empty($elem->sub_nav)) {
                 return $elem->sub_nav;
             } else if (!empty($elem->sub_nav)) {
-                $test_children = $this->find_branch($slug, $prop, $elem->sub_nav);
+                $test_children = $this->get_branch($id, $prop, $elem->sub_nav);
                 if ($test_children) {
                   return $test_children;
                 }
@@ -199,13 +192,14 @@ abstract class NavigableNav
       *     @return array     Nav element tree
       */
     private function build_nav_tree($nav_elements) {
+
         $new_nav = array();
 
         foreach ($nav_elements as $elem) {
             if ($elem->has_been_walked) {continue;}
+            $elem->mark_walked();
 
             //returns an array containing all of the element's children. Recursive.
-            $elem->mark_walked();
             $elem->sub_nav = $this->find_children($nav_elements, $elem->id);
             if ($elem->is_a_root_element()) {
                 $new_nav[$elem->id] = $elem;
@@ -289,6 +283,20 @@ abstract class NavigableNav
         }
 
     }
+
+	/*
+	 *	Fetch the ID of the current post from wordpress
+	 *
+	 *	@return string	The id of the current post if it's possible to get it, false if not
+	 */
+	private function determine_current() {
+
+		if (function_exists('get_queried_object') && !empty(get_queried_object()->ID)) {
+			return get_queried_object()->ID;
+		} else {
+			return false;
+		}
+	}
 
      /*
       *     Assumes clean urls which match navigation elements, makes the best assumption it can 

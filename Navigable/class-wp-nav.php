@@ -20,20 +20,6 @@ class NavigableWP extends NavigableNav
 	}
 	
 	/*
-	 *	Fetch the ID of the current post from wordpress
-	 *
-	 *	@return string	The id of the current post if it's possible to get it, false if not
-	 */
-	public function determine_current() {
-		//
-		if (function_exists('get_queried_object')) {
-			return get_queried_object()->ID;
-		} else {
-			return false;
-		}
-	}
-	
-	/*
 	 *	Converts the raw array of data given by wordpress into NavElement objects
 	 *
 	 *	@param  array 	Wordpress navigation elements
