@@ -106,15 +106,16 @@ abstract class NavigableNav
       *     @param string $mode          Which property to compare against, either id or slug
       *     @param bool       $wall          Whether or not to recurse into subnav elements
       */
-    public function elem_in_tree($nav_tree, $val, $mode = 'id', $wall = false) {
+    public function elem_in_tree($val, $tree = null,  $mode = 'id', $wall = false) {
+        $tree = empty($tree) ? $this->tree : $tree;
 
-        foreach ($nav_tree as $elem) {
+        foreach ($tree as $elem) {
             if ($elem->$mode == $val) {
                 return $elem->id;
             }
 
             if (!empty($elem->sub_nav) && !$wall) {
-                $test_children = $this->elem_in_tree($elem->sub_nav, $val, $mode);
+                $test_children = $this->elem_in_tree($val, $elem->sub_nav, $mode);
                 if ($test_children ) {return $test_children;}
             }
         }
@@ -127,7 +128,7 @@ abstract class NavigableNav
       *
       * @param string $id   The value to look for in the given property
       * @param string $prop Which property to test elements for for the given id
-      * @return array               A navigation tree, or false.
+      * @return array       A navigation tree, or false.
       */
 
     public function get_branch($id, $prop = 'id', $tree = false) {
@@ -203,7 +204,7 @@ abstract class NavigableNav
             $elem->sub_nav = $this->find_children($nav_elements, $elem->id);
             if ($elem->is_a_root_element()) {
                 $new_nav[$elem->id] = $elem;
-            } else if ($this->elem_in_tree($new_nav, $elem->parent_id)) {
+            } else if ($this->elem_in_tree($elem->parent_id, $new_nav)) {
                 $this->append_to_subnav($new_nav, $elem);
             } else {
                 $this->append_to_subnav($nav_elements, $elem);
@@ -311,7 +312,7 @@ abstract class NavigableNav
         array_shift($path);     //first element always an empty string because of leading slash.
 
         foreach ($path as $page_slug) {
-           if ($id = $this->elem_in_tree($tree, $page_slug, 'slug', true)) {
+           if ($id = $this->elem_in_tree($page_slug, $tree, 'slug', true)) {
                 $elem = $this->get_element($tree, $id);
                 if (!empty($elem->sub_nav)) {
                      $tree = $elem->sub_nav;
