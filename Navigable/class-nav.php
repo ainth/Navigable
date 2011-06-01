@@ -1,9 +1,9 @@
 <?php
 /*
      Plugin Name: Navigable
-     Plugin URI: 
+     Plugin URI: http://github.com/intelligible/Navigable
      Description: Provides an object oriented navigation interface for templating as an alternative to wp_nav_menu(). PHP5+ required.
-     Version: 0.35
+     Version: 0.36
      Author: Allen Hebden
      Author URI: http://intelligible.ca
      License: GPL2
