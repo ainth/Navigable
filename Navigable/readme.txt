@@ -3,8 +3,8 @@ Contributors: ainth
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=allen%40intelligible%2eca&lc=CA&item_name=Navigable&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: navigation, sub-nav, subnav, menu templating, menus, nav interface
 Requires at least: 3.0
-Tested up to: 3.1
-Stable tag: 0.36
+Tested up to: 3.2
+Stable tag: 0.38
 
 Navigable is a WordPress plugin for template developers. It gives you an alternative to WordPress's wp_nav_menu() function.
 
