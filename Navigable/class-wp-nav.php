@@ -19,7 +19,7 @@ class NavigableWP extends NavigableNav
     if ($this->raw === false) {
       trigger_error("Navigable could not find the navigation object called '{$nav_selector}'", E_USER_NOTICE);
     }
-
+    $this-> raw = $this->raw === false ? array() : $this-> raw;
 		$this->page_slugs = $this->get_page_slugs();
 		parent::__construct();
 		
