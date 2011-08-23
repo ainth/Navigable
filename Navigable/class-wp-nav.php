@@ -16,7 +16,7 @@ class NavigableWP extends NavigableNav
     $this->raw = wp_get_nav_menu_items($nav_selector, $params);
     
     //If false, invalid name passed
-    if ($this->raw == false) {
+    if ($this->raw === false) {
       trigger_error("Navigable could not find the navigation object called '{$nav_selector}'", E_USER_NOTICE);
     }
 
