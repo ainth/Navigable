@@ -22,7 +22,8 @@ function get_pages() {
             "menu_order" => $i,
             "post_title" => 'hehetitle',
             "post_parent" => $parent,
-            "post_name"  => 'heheslug'
+            "post_name"  => 'heheslug',
+            "attr_title" => 'attr_title'
         );
     }
     return $dummy_data;

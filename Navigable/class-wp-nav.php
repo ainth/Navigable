@@ -13,7 +13,13 @@ class NavigableWP extends NavigableNav
 	 */
 	public function __construct($nav_selector, $params = array()) {
 		
-		$this->raw = wp_get_nav_menu_items($nav_selector, $params);
+    $this->raw = wp_get_nav_menu_items($nav_selector, $params);
+    
+    //If false, invalid name passed
+    if ($this->raw == false) {
+      trigger_error("Navigable could not find the navigation object called '{$nav_selector}'", E_USER_NOTICE);
+    }
+
 		$this->page_slugs = $this->get_page_slugs();
 		parent::__construct();
 		
@@ -35,6 +41,7 @@ class NavigableWP extends NavigableNav
 				'order'		=> $elem->menu_order,
 				'url'	 	=> $elem->url,
 				'title'		=> $elem->title,
+        'attr_title' => $elem->attr_title,
 				'parent' 	=> $elem->menu_item_parent,
 				'slug'		=> $slug
 			));

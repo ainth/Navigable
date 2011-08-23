@@ -32,6 +32,7 @@ class NavigableWPPages extends NavigableNav
 				'order'		=> $elem->menu_order,
 				'url'	 	=> get_permalink($elem->ID),
 				'title'		=> $elem->post_title,
+        'attr_title' => $elem->attr_title,
 				'parent' 	=> $elem->post_parent,
 				'slug'		=> $elem->post_name
 			));
