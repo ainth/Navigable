@@ -3,7 +3,7 @@
      Plugin Name: Navigable
      Plugin URI: http://github.com/intelligible/Navigable
      Description: Provides an object oriented navigation interface for templating as an alternative to wp_nav_menu(). PHP5+ required.
-     Version: 0.38
+     Version: 0.39
      Author: Allen Hebden
      Author URI: http://intelligible.ca
      License: GPL2
@@ -313,7 +313,7 @@ abstract class NavigableNav
 
         foreach ($path as $page_slug) {
            if ($id = $this->elem_in_tree($page_slug, $tree, 'slug', true)) {
-                $elem = $this->get_element($tree, $id);
+                $elem = $this->get_element($id, $tree);
                 if (!empty($elem->sub_nav)) {
                      $tree = $elem->sub_nav;
                 } else {
