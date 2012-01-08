@@ -34,7 +34,8 @@ class NavigableWPPages extends NavigableNav
 				'title'		=> $elem->post_title,
         'attr_title' => $elem->attr_title,
 				'parent' 	=> $elem->post_parent,
-				'slug'		=> $elem->post_name
+				'slug'		=> $elem->post_name,
+				'is_category' => $elem->object === 'category'
 			));
 		}
 		

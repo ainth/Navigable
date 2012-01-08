@@ -3,7 +3,7 @@
      Plugin Name: Navigable
      Plugin URI: http://github.com/intelligible/Navigable
      Description: Provides an object oriented navigation interface for templating as an alternative to wp_nav_menu(). PHP5+ required.
-     Version: 0.39
+     Version: 0.40
      Author: Allen Hebden
      Author URI: http://intelligible.ca
      License: GPL2
@@ -20,6 +20,7 @@ abstract class NavigableNav
      public  $cleaned_objects;
      public  $page_slugs;
      public  $tree;
+	 public  $current_is_category;
 
  /*------------------------------------------------------
   * Abstract Methods
@@ -286,6 +287,22 @@ abstract class NavigableNav
     }
 
 	/*
+	 * If the current 'page' is a category, will return the category id else false
+	 */
+
+	private function get_current_cat_id() {
+
+		global $wp_query;
+		$cat_id = false;
+
+		if(is_category() || is_single()){
+			$cat_id = get_query_var('cat');
+		}
+		return $cat_id;
+		
+	}
+
+	/*
 	 *	Fetch the ID of the current post from wordpress
 	 *
 	 *	@return string	The id of the current post if it's possible to get it, false if not
@@ -294,6 +311,10 @@ abstract class NavigableNav
 
 		if (function_exists('get_queried_object') && !empty(get_queried_object()->ID)) {
 			return get_queried_object()->ID;
+		// This doesn't seem to apply for categories so see if we can get a category id.
+		} elseif ($cat_id = $this->get_current_cat_id()) {
+			$this->current_is_category = true;
+			return $cat_id;
 		} else {
 			return false;
 		}
@@ -335,8 +356,15 @@ abstract class NavigableNav
         foreach ($nav_tier as $key => $elem) {
 
             if ($elem->object_id == $this->current_post) {
-                $nav_tier = $this->flag($nav_tier, $key);
-                return $nav_tier;
+				if ($this->current_is_category) {
+					if ($elem->is_category) {
+						$nav_tier = $this->flag($nav_tier, $key);
+						return $nav_tier;
+					}
+				} else {
+					$nav_tier = $this->flag($nav_tier, $key);
+					return $nav_tier;					
+				}
             }
 
             if (!empty($elem->sub_nav)) {

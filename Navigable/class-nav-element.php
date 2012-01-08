@@ -11,6 +11,7 @@ class NavigableNavElement
 	public $parent_id;
     public $slug;
     public $has_been_walked = false;
+	public $is_category;
 	
 	/*
 	 *	Subnav holder. Built out in build_nav_tree
@@ -31,14 +32,15 @@ class NavigableNavElement
 	
 	
 	public function __construct($elem) {
-    $this->id	 	      = $elem['id'];
-    $this->object_id  = $elem['object_id'];
-    $this->order	    = $elem['order'];
-    $this->url	 	    = $elem['url'];
-    $this->title	    = $elem['title'];
-    $this->attr_title = $elem['attr_title'];
-    $this->parent_id  = $elem['parent'];
-    $this->slug	      = $elem['slug'];
+		$this->id	 	   = $elem['id'];
+		$this->object_id   = $elem['object_id'];
+		$this->order	   = $elem['order'];
+		$this->url	 	   = $elem['url'];
+		$this->title	   = $elem['title'];
+		$this->attr_title  = $elem['attr_title'];
+		$this->parent_id   = $elem['parent'];
+		$this->slug	       = $elem['slug'];
+		$this->is_category = $elem['is_category'];
 	}
 	
 	

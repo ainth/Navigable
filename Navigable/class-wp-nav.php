@@ -41,9 +41,10 @@ class NavigableWP extends NavigableNav
 				'order'		=> $elem->menu_order,
 				'url'	 	=> $elem->url,
 				'title'		=> $elem->title,
-        'attr_title' => $elem->attr_title,
+        		'attr_title' => $elem->attr_title,
 				'parent' 	=> $elem->menu_item_parent,
-				'slug'		=> $slug
+				'slug'		=> $slug,
+				'is_category' => $elem->object === 'category'
 			));
 		}
 		return $nav_elements;
